@@ -1,9 +1,9 @@
 services:
   python:
     build: ./python
-    container_name: 'vsc-docker-python-env'
+    container_name: 'bark'
     stdin_open: true
     tty: true
     working_dir: '/tmp/work'
     volumes:
-      - ../../vsc-docker-python-env:/tmp/work
+      - ../../bark:/tmp/work
