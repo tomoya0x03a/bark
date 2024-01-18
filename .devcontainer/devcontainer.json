@@ -9,7 +9,8 @@
         "ms-ceintl.vscode-language-pack-ja",
         "ms-python.python",
         "ms-python.black-formatter",
-        "ms-python.flake8"
+        "ms-python.flake8",
+        "phind.phind"
       ],
       "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
