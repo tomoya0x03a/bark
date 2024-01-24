@@ -38,3 +38,15 @@ class DatabaseManager:
             """,
             column_values,
         )
+
+    def delete(self, table_name, creteria):
+        placeholders = [f"{column} = ?" for column in creteria.keys()]
+        delete_criteria = " AND ".join(placeholders)
+
+        self._execute(
+            f"""
+            DELETE FROM {table_name}
+            WHERE {delete_criteria}
+            """,
+            tuple(creteria.values()),
+        )
