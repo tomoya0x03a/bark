@@ -5,6 +5,7 @@ WORKDIR /tmp/work
 COPY requirements.txt ${PWD}
 
 RUN apt-get update \
+&& apt-get install -y sqlite3 libsqlite3-dev \
 && apt-get install -y git \
 && git config --global core.editor "code --wait" \
 && pip install -r requirements.txt
