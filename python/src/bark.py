@@ -70,9 +70,7 @@ def clear_screen():
     os.system(clear)
 
 
-if __name__ == "__main__":
-    commands.CreateBookMarksTableCommand().execute()
-
+def loop():
     options = OrderedDict(
         {
             "A": Option(
@@ -105,3 +103,12 @@ if __name__ == "__main__":
     chosen_option = get_option_choice(options)
     clear_screen()
     chosen_option.choose()
+
+    _ = input("Enter(retrun)キーを押すとメニューに戻ります")
+
+
+if __name__ == "__main__":
+    commands.CreateBookMarksTableCommand().execute()
+
+    while True:
+        loop()
