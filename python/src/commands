@@ -1,0 +1,17 @@
+from database import DatabaseManager
+
+db = DatabaseManager("bookmarks.db")
+
+
+class CreateBookMarksTableComand:
+    def execute(self):
+        db.create_table(
+            "bookmarks",
+            {
+                "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+                "タイトル": "TEXT NOT NULL",
+                "url": "TEXT NOT NULL",
+                "メモ": "TEXT",
+                "追加日時": "TEXT NOT NULL",
+            },
+        )
