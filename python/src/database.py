@@ -46,7 +46,22 @@ class DatabaseManager:
         self._execute(
             f"""
             DELETE FROM {table_name}
-            WHERE {delete_criteria}
+            WHERE {delete_criteria};
             """,
             tuple(creteria.values()),
         )
+
+    def select(self, table_name, creteria=None, order_by=None):
+        creteria = creteria or {}
+
+        query = f"SELECT * FROM {table_name}"
+
+        if creteria:
+            placeholders = [f"{column} = ?" for column in creteria.keys()]
+            select_criteria = " AND ".join(placeholders)
+            query += f" WHERE {select_criteria}"
+
+        if order_by:
+            query += f" ORDER BY {order_by}"
+
+        return self._execute(query, tuple(creteria.values()))
