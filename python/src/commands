@@ -31,3 +31,9 @@ class ListBookmarksCommand:
 
     def execute(self):
         db.select(self, "bookmarks", order_by=self.order_by).fetchall()
+
+
+class DeleteBookmarkCommand:
+    def execute(self, data):
+        db.delete(self, "bookmarks", {"id": data})
+        return "ブックマークを削除しました。"
