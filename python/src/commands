@@ -23,3 +23,11 @@ class AddBookmarkCommand:
         data["追加日時"] = datetime.datetime.utcnow().isformat()
         db.add("bookmarks", data)
         return "ブックマークを追加しました。"
+
+
+class ListBookmarksCommand:
+    def __init__(self, order_by="登録順"):
+        self.order_by = order_by
+
+    def execute(self):
+        db.select(self, "bookmarks", order_by=self.order_by).fetchall()
