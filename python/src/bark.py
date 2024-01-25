@@ -1,4 +1,5 @@
 import commands
+import os
 from collections import OrderedDict
 
 
@@ -64,6 +65,11 @@ def get_bookmark_id_for_deletion():
     return get_user_input("削除するブックマークのIDを指定")
 
 
+def clear_screen():
+    clear = "cls" if os.name == "nt" else "clear"
+    os.system(clear)
+
+
 if __name__ == "__main__":
     commands.CreateBookMarksTableCommand().execute()
 
@@ -94,7 +100,8 @@ if __name__ == "__main__":
         }
     )
 
+    clear_screen()
     print_options(options)
-
     chosen_option = get_option_choice(options)
+    clear_screen()
     chosen_option.choose()
