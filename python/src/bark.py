@@ -65,7 +65,7 @@ def get_bookmark_id_for_deletion():
 
 
 if __name__ == "__main__":
-    commands.CreateBookMarksTableCommand().execute
+    commands.CreateBookMarksTableCommand().execute()
 
     options = OrderedDict(
         {

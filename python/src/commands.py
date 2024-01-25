@@ -13,7 +13,7 @@ class CreateBookMarksTableCommand:
                 "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
                 "title": "TEXT NOT NULL",
                 "url": "TEXT NOT NULL",
-                "memo": "TEXT",
+                "notes": "TEXT",
                 "date_added": "TEXT NOT NULL",
             },
         )
@@ -21,7 +21,7 @@ class CreateBookMarksTableCommand:
 
 class AddBookmarkCommand:
     def execute(self, data):
-        data["date_added"] = datetime.datetime.utcnow().isformat()
+        data["date_added"] = datetime.datetime.utcnow().isoformat()
         db.add("bookmarks", data)
         return "ブックマークを追加しました。"
 
@@ -31,12 +31,12 @@ class ListBookmarksCommand:
         self.order_by = order_by
 
     def execute(self):
-        db.select(self, "bookmarks", order_by=self.order_by).fetchall()
+        return db.select("bookmarks", order_by=self.order_by).fetchall()
 
 
 class DeleteBookmarkCommand:
     def execute(self, data):
-        db.delete(self, "bookmarks", {"id": data})
+        db.delete("bookmarks", {"id": data})
         return "ブックマークを削除しました。"
 
 
