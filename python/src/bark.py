@@ -1,5 +1,10 @@
 import commands
-from collections import OrderDict
+from collections import OrderedDict
+
+
+def print_bookmarks(bookmarks):
+    for bookmark in bookmarks:
+        print("\t".join(str(field) if field else "" for field in bookmark))
 
 
 class Option:
@@ -28,10 +33,41 @@ def print_options(options):
         print(f"({shortcut}) {option}")
 
 
+def option_choice_is_valid(choice, options):
+    return choice in options or choice.upper() in options
+
+
+def get_option_choice(options):
+    choice = input("操作を選択してください:")
+    while not option_choice_is_valid(choice, options):
+        print("A, B, T, D, Qのいずれかを入力してください（小文字でもOK。ただし半角文字）")
+        choice = input("操作を選択してください:")
+    return options[choice.upper()]
+
+
+def get_user_input(label, required=True):
+    value = input(f"{label}: ") or None
+    while required and not value:
+        value = input(f"{label}: ") or None
+    return value
+
+
+def get_new_bookmark_data():
+    return {
+        "title": get_user_input("タイトル"),
+        "url": get_user_input("URL"),
+        "notes": get_user_input("メモ", required=False),
+    }
+
+
+def get_bookmark_id_for_deletion():
+    return get_user_input("削除するブックマークのIDを指定")
+
+
 if __name__ == "__main__":
     commands.CreateBookMarksTableCommand().execute
 
-    options = OrderDict(
+    options = OrderedDict(
         {
             "A": Option(
                 "追加",
@@ -59,3 +95,6 @@ if __name__ == "__main__":
     )
 
     print_options(options)
+
+    chosen_option = get_option_choice(options)
+    chosen_option.choose()
