@@ -70,6 +70,17 @@ def clear_screen():
     os.system(clear)
 
 
+def get_github_import_options():
+    return {
+        "github_username": get_user_input("GitHubのユーザー名"),
+        "preserve_timestamps": get_user_input(
+            "タイムスタンプを維持しますか [Y/n]",
+            required=False,
+        )
+        in {"Y", "y", None},
+    }
+
+
 def loop():
     options = OrderedDict(
         {
@@ -90,6 +101,11 @@ def loop():
                 "削除",
                 commands.DeleteBookmarkCommand(),
                 prep_call=get_bookmark_id_for_deletion,
+            ),
+            "G": Option(
+                "GitHubのスターをインポート",
+                commands.ImportGitHubStarsCommand(),
+                prep_call=get_github_import_options,
             ),
             "Q": Option(
                 "終了",
