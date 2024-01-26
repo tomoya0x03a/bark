@@ -65,6 +65,19 @@ def get_bookmark_id_for_deletion():
     return get_user_input("削除するブックマークのIDを指定")
 
 
+def get_edit_bookmark_data():
+    bookmark_id = get_user_input("編集対象のIDを入力してください")
+    field = get_user_input(
+        """編集項目をしてしてください
+        （｢title｣,｢url｣,｢notes｣のいずれか）"""
+    )
+    new_value = get_user_input(f"{field}の新しい値")
+    return {
+        "update": {field: new_value},
+        "id": bookmark_id,
+    }
+
+
 def clear_screen():
     clear = "cls" if os.name == "nt" else "clear"
     os.system(clear)
@@ -101,6 +114,11 @@ def loop():
                 "削除",
                 commands.DeleteBookmarkCommand(),
                 prep_call=get_bookmark_id_for_deletion,
+            ),
+            "E": Option(
+                "編集",
+                commands.EditBookmarkCommand(),
+                prep_call=get_edit_bookmark_data,
             ),
             "G": Option(
                 "GitHubのスターをインポート",

@@ -65,3 +65,18 @@ class DatabaseManager:
             query += f" ORDER BY {order_by}"
 
         return self._execute(query, tuple(creteria.values()))
+
+    def update(self, table_name, data, creteria):
+        set_placeholders = ", ".join([f"{column} = ?" for column in data.keys()])
+        criteria_placeholders = " AND ".join(
+            [f"{column} = ?" for column in creteria.keys()]
+        )
+        values = tuple(data.values()) + tuple(creteria.values())
+        self._execute(
+            f"""
+            UPDATE {table_name}
+            SET {set_placeholders}
+            WHERE {criteria_placeholders};
+            """,
+            values,
+        )

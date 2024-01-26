@@ -41,6 +41,18 @@ class DeleteBookmarkCommand:
         return "ブックマークを削除しました。"
 
 
+class EditBookmarkCommand:
+    def execute(self, data):
+        db.update(
+            "bookmarks",
+            data["update"],
+            {
+                "id": data["id"],
+            },
+        )
+        return "ブックマークを編集しました。"
+
+
 class QuitCommand:
     def execute(self):
         sys.exit()
