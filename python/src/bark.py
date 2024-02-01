@@ -88,8 +88,8 @@ def get_edit_bookmark_data():
     )
     new_value = get_user_input(f"{field}の新しい値")
     return {
-        "update": {field: new_value},
         "id": bookmark_id,
+        "update": {field: new_value},
     }
 
 
@@ -161,7 +161,5 @@ def loop():
 
 
 if __name__ == "__main__":
-    commands.CreateBookMarksTableCommand().execute()
-
     while True:
         loop()

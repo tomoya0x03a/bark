@@ -1,10 +1,11 @@
-from database import DatabaseManager
 from abc import ABC, abstractmethod
 import datetime
 import sys
 import requests
 
-db = DatabaseManager("bookmarks.db")
+from presistence import BookmarkDatabase
+
+presistence = BookmarkDatabase()
 
 
 class Command(ABC):
@@ -13,25 +14,10 @@ class Command(ABC):
         raise NotImplementedError("コマンドは必ずメソッドexecuteを実装してください")
 
 
-class CreateBookMarksTableCommand(Command):
-    def execute(self, data=None):
-        db.create_table(
-            "bookmarks",
-            {
-                "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
-                "title": "TEXT NOT NULL",
-                "url": "TEXT NOT NULL",
-                "notes": "TEXT",
-                "date_added": "TEXT NOT NULL",
-            },
-        )
-        return True, None
-
-
 class AddBookmarkCommand(Command):
     def execute(self, data, timestamp=None):
         data["date_added"] = timestamp or datetime.datetime.utcnow().isoformat()
-        db.add("bookmarks", data)
+        presistence.create(data)
         return True, None
 
 
@@ -40,24 +26,18 @@ class ListBookmarksCommand(Command):
         self.order_by = order_by
 
     def execute(self, data):
-        return True, db.select("bookmarks", order_by=self.order_by).fetchall()
+        return True, presistence.list(order_by=self.order_by)
 
 
 class DeleteBookmarkCommand(Command):
     def execute(self, data):
-        db.delete("bookmarks", {"id": data})
+        presistence.delete(data)
         return True, None
 
 
 class EditBookmarkCommand(Command):
     def execute(self, data):
-        db.update(
-            "bookmarks",
-            data["update"],
-            {
-                "id": data["id"],
-            },
-        )
+        presistence.edit(data["id"], data["update"])
         return True, None
 
 

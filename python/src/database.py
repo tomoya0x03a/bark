@@ -66,7 +66,7 @@ class DatabaseManager:
 
         return self._execute(query, tuple(creteria.values()))
 
-    def update(self, table_name, data, creteria):
+    def update(self, table_name, creteria, data):
         set_placeholders = ", ".join([f"{column} = ?" for column in data.keys()])
         criteria_placeholders = " AND ".join(
             [f"{column} = ?" for column in creteria.keys()]
