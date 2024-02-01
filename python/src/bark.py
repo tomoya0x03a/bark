@@ -3,16 +3,21 @@ import os
 from collections import OrderedDict
 
 
+def format_bookmark(bookmark):
+    return "\t".join(str(field) if field else "" for field in bookmark)
+
+
 def print_bookmarks(bookmarks):
     for bookmark in bookmarks:
         print("\t".join(str(field) if field else "" for field in bookmark))
 
 
 class Option:
-    def __init__(self, name, command, prep_call=None):
+    def __init__(self, name, command, prep_call=None, success_message="{result}"):
         self.name = name
         self.command = command
         self.prep_call = prep_call
+        self.success_message = success_message
 
     def _handle_message(self, message):
         if isinstance(message, list):
@@ -22,8 +27,18 @@ class Option:
 
     def choose(self):
         data = self.prep_call() if self.prep_call else None
-        message = self.command.execute(data) if data else self.command.execute()
-        self._handle_message(message)
+        success, result = self.command.execute(data)
+
+        formatted_result = ""
+
+        if isinstance(result, list):
+            for bookmark in result:
+                formatted_result += "\n" + format_bookmark(bookmark)
+        else:
+            formatted_result = result
+
+        if success:
+            print(self.success_message.format(result=formatted_result))
 
     def __str__(self):
         return self.name
@@ -101,6 +116,7 @@ def loop():
                 "追加",
                 commands.AddBookmarkCommand(),
                 prep_call=get_new_bookmark_data,
+                success_message="ブックマークを追加しました。",
             ),
             "B": Option(
                 "登録順にリスト",
@@ -114,16 +130,19 @@ def loop():
                 "削除",
                 commands.DeleteBookmarkCommand(),
                 prep_call=get_bookmark_id_for_deletion,
+                success_message="ブックマークを削除しました。",
             ),
             "E": Option(
                 "編集",
                 commands.EditBookmarkCommand(),
                 prep_call=get_edit_bookmark_data,
+                success_message="ブックマークを更新しました。",
             ),
             "G": Option(
                 "GitHubのスターをインポート",
                 commands.ImportGitHubStarsCommand(),
                 prep_call=get_github_import_options,
+                success_message="ブックマークをインポートしました。",
             ),
             "Q": Option(
                 "終了",

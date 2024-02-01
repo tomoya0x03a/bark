@@ -25,27 +25,28 @@ class CreateBookMarksTableCommand(Command):
                 "date_added": "TEXT NOT NULL",
             },
         )
+        return True, None
 
 
 class AddBookmarkCommand(Command):
     def execute(self, data, timestamp=None):
         data["date_added"] = timestamp or datetime.datetime.utcnow().isoformat()
         db.add("bookmarks", data)
-        return "ブックマークを追加しました。"
+        return True, None
 
 
 class ListBookmarksCommand(Command):
     def __init__(self, order_by="date_added"):
         self.order_by = order_by
 
-    def execute(self):
-        return db.select("bookmarks", order_by=self.order_by).fetchall()
+    def execute(self, data):
+        return True, db.select("bookmarks", order_by=self.order_by).fetchall()
 
 
 class DeleteBookmarkCommand(Command):
     def execute(self, data):
         db.delete("bookmarks", {"id": data})
-        return "ブックマークを削除しました。"
+        return True, None
 
 
 class EditBookmarkCommand(Command):
@@ -57,7 +58,7 @@ class EditBookmarkCommand(Command):
                 "id": data["id"],
             },
         )
-        return "ブックマークを編集しました。"
+        return True, None
 
 
 class QuitCommand(Command):
@@ -100,4 +101,4 @@ class ImportGitHubStarsCommand(Command):
                     self._extract_bookmark_info(repo_info), timestamp=timestamp
                 )
 
-        return f"{bookmarks_imported}個のブックマークをインポートしました。"
+        return True, bookmarks_imported
